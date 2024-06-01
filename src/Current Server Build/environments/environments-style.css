@@ -1,0 +1,98 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.topnav {
+    overflow: hidden;
+    background-color: #333;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+.topnav a {
+    float: left;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.topnav a:hover, .topnav a.active {
+    background-color: #575757;
+}
+
+.image-container img {
+    width: 100%;
+    height: auto;
+}
+
+.plant-container {
+    background-color: #cf8754;
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    border: 5px solid rgb(53, 51, 51);
+}
+
+.plant-item {
+    width: 150px;
+    height: 150px;
+    margin: 10px;
+    background-color: #90EE90; /* Optional: might want to make this transparent */
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    border: 3px solid rgb(70, 112, 95);
+    overflow: hidden; /* Ensures the image doesn't exceed the div size */
+}
+
+.plant-item img {
+    display: block; /* Removes bottom margin/gap */
+    max-width: 100%; /* Ensures the image is fully contained within the item */
+}
+
+
+.plant-popup {
+    display: block;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgb(84, 142, 150);
+    padding: 20px;
+    z-index: 1001;
+    border-radius: 5px;
+}
+
+.plant-popup img {
+    width: 100%;
+    height: auto;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+/*The overlay that will dim the page when the popup is being accessed*/
+.dim-overlay {
+    position: fixed; /* Positioning relative to the viewport */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    z-index: 1000; /* Ensure it's below the popup but above other content */
+    display: none; /* Hidden by default */
+}

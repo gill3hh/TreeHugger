@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tree Hugger</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        #video {
+            width: 100%; /*making it 100% so that it adjusts according to screen */
+            max-width: 800px; 
+            height: auto;
+            border: 1px solid #ccc;
+            background-color: #000;
+        }
+
+        #canvas {
+            display: none;
+            margin-top: 20px; 
+        }
+
+        #errorMsg {
+            color: red;
+        }
+
+        .button-group {
+            margin-top: 20px;
+            text-align: center; 
+        }
+
+        .button-group button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin: 0 10px;
+            border-radius: 5px;
+            font-size: 16px;
+            outline: none; 
+        }
+
+        .button-group button:hover {
+            background-color: #45a049;
+        }
+
+        
+        @media (max-width: 600px) {
+            #video {
+                max-width: 90%; /* setting maximum width for small screens */
+            }
+        }
+    </style>
+</head>
+<body> 
+    <div class="container">
+        <div class="video-wrap">
+            <video id="video" playsinline autoplay></video>
+        </div>
+
+        <canvas id="canvas" width="720" height="600"></canvas>
+        <div class="button-group">
+            <button id="Capture">Capture Photo</button> <!-- button for capturing photo-->
+            <button id="Recapture" style="display: none;">Recapture Photo</button>
+        </div>
+        <p id="errorMsg"></p>
+    </div>
+
+    <script>
+        'use strict';
+
+        const video = document.getElementById('video');
+        const captureButton = document.getElementById('Capture');
+        const recaptureButton = document.getElementById('Recapture');
+        const canvas = document.getElementById('canvas');
+        const errorMsg = document.getElementById('errorMsg');
+
+        const constraints = {
+            audio: false,
+            video: { width: 720, height: 600 } // camera size when user is trying to take a picture
+        };
+
+        async function init() {// the media stream ( as i have used the sttream option and it used stream and then capture an image from the stream)
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                handleSuccess(stream);
+            } catch (e) {
+                errorMsg.innerHTML = `navigator.getUserMedia error: ${e.toString()}`;
+            }
+        }
+
+        function handleSuccess(stream) {
+            window.stream = stream;
+            video.srcObject = stream;
+
+            const track = stream.getVideoTracks()[0];
+            const settings = track.getSettings();
+            video.width = settings.width;
+            video.height = settings.height;
+        }
+
+        init();
+
+        captureButton.addEventListener('click', function() { // capture the image onto the canvas and keep the same keep the size of the image as described here 
+            const context = canvas.getContext('2d');
+            canvas.style.display = 'block';
+            context.drawImage(video, 0, 0, 720, 600);
+            video.style.display = 'none';
+            captureButton.style.display = 'none';
+            recaptureButton.style.display = 'inline-block';
+        });
+
+        recaptureButton.addEventListener('click', function() {// omce the image is captured i have put a recapture button if user doesnt like the clicked picture then can click new image
+            video.style.display = 'block';
+            canvas.style.display = 'none';
+            captureButton.style.display = 'inline-block';
+            recaptureButton.style.display = 'none';
+        });
+
+        
+        video.addEventListener('loadedmetadata', function() {// this makes sure that the video size is updated and is equal to our video as we have described above. 
+            video.width = this.videoWidth;
+            video.height = this.videoHeight;
+        });
+    </script>
+</body>
+</html>

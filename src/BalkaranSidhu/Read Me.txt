@@ -1,0 +1,12 @@
+Plant Hugger.
+
+Plant application contaims the HTML, CSS and Java Script code in one file.
+Back ground image and logo image is hardcoded so need to change directory in line 12 and 88 of the code to display. 
+
+Script has the main functationaly to display name, common name and probabily of the match to display. More information about the plant can be recived from API by adding more in featch function. API key is in line 170 and can change the key if out of credits and need more credits with new key.
+
+imp: turn off the camera kill switch, so permission can be granted to use the camera.
+
+
+Team
+

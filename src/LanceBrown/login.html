@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Page</title>
+    <!-- Head section for link to CSS -->
+    <link rel="stylesheet" type="text/css" href="login-style-rev.css">
+</head>
+<body>
+    <!-- Background div that covers the entire page -->
+    <div class="background">
+
+        <div class="login-container">
+            
+            <!-- Image object for the Tree Hugger Co. Logo -->
+            <img src='Tree-Hugger-Co-Logo.png' alt="Tree Hugger Co." class="login-logo-image">
+            
+            <text id="mainResponse"></text>
+
+            <!-- Container for the log in and register sections -->
+            <div class="main-container" id="main">
+
+                <!-- Container for the Sign In and Sign Up buttons -->
+                <div class="tab-button-container">
+                    
+                    <!-- Sign In and Sign up buttons -->
+                    <button id="signInBtn" class="signUpInput tab">Sign In</button>
+                    <button id="signUpBtn" class="signInInput tab">Sign Up</button>
+
+                </div>
+                
+                <!-- Sign In form section -->
+                <div id="signInForm">
+                    <label for="signInUsernameInput">USERNAME</label>
+                    <input type="text" id="signInUsernameInput" class="signInInput" placeholder="e.g. JohnDoe123">    <!-- username text field -->
+                    
+                    <!-- Container for the password section -->
+                    <div class="password-container">
+                        
+                        <label for="signInPasswordInput">PASSWORD</label>
+                        <input type="password" id="signInPasswordInput" class="signInInput" placeholder="*************">     <!-- password text field -->
+                        <button type="button" id="signInTogglePassword" class="toggle-password signInInput">👁️‍🗨️</button>   <!-- password visibility icon -->
+                    </div>
+
+                    
+                    <button type="button" id="login" class="signInInput">Login</button>    <!-- Login button -->
+                    <button id="forgotPassword" class="signInInput" >Forgot Password?</button>  <!-- Forgot Password Link -->
+                </div>
+
+                <!-- Sign Up form section (initially hidden) -->
+                <div id="signUpForm" style="display: none;">
+                    
+                    <!-- Username section -->
+                    <label for="signUpUsernameInput">USERNAME</label>
+                    <input type="text" id="signUpUsernameInput" class="signUpInput" placeholder="e.g. JohnDoe123">          <!-- username text filed -->
+                    
+                    <!-- Container for the password section -->
+                    <div class="password-container">
+                        
+                        <label for="signInPasswordInput">PASSWORD</label>
+                        <input type="password" id="signUpPasswordInput" class="signUpInput" placeholder="*************">     <!-- password text field -->
+                        <button type="button" id="signUpTogglePassword" class="toggle-password signUpInput">👁️‍🗨️</button>   <!-- password visibility icon -->
+                    </div>
+                    
+                    <!-- Email section -->
+                    <label for="signUpEmailInput">EMAIL</label>
+                    <input type="email" id="signUpEmailInput" class="signUpInput" placeholder="e.g. johndoe123@gmail.com">               <!-- email text field -->
+                    
+                    <!-- Register button -->
+                    <button type="button" id="register" class="signUpInput">Register</button>
+                </div>
+            </div>
+
+            <!-- Security Code section -->
+            <div class = "security-container" style="display: none;" id="security">
+                <body id="security-body">
+                    A security code has been sent to the email address you have chosen to register with. Please enter it below.
+                </body>
+                <text id="securityResponse"></text>
+                <label for="codeInput" id ="codeInputLabel">SECURITY CODE</label>
+                <input type="code" id="codeInput" class="securityInput" placeholder="e.g. G2XH7U">                            <!-- code text field -->
+                <button type="button" id="verify" class="securityInput">Verify</button>
+            </div>
+        </div>
+    </div>
+    <script src="login-source.js"></script>   <!-- link to the javascript file -->
+</body>
+</html>

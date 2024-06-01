@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Identification App</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        
+        body {      /* we will style our page so that it sinks with the theme*/
+            font-family: 'Roboto', sans-serif;
+            background-image: url('https://images.app.goo.gl/84J96D3ebk2Pc9i69'); 
+            background-size: cover;
+            background-position: center;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            
+        }
+
+        #header {
+            background-color: #4CAF50; 
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 20px; 
+        }
+
+        #instructions {
+            text-align: center; /* I have specify instructions how to take photos and align them in centre for better looking of the page */
+            margin-top: 20px;
+            padding: 0 5%; 
+        }
+
+        .instruction-step {
+            margin-bottom: 10px; 
+        }
+
+        #upload-section {
+            text-align: center;
+            margin-top: 20px;
+            padding: 0 5%; 
+        }
+
+        button {
+            background-color: #4CAF50; 
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin: 5px; 
+            border-radius: 5px; 
+            outline: none; 
+            font-size: 1rem; 
+        }
+
+        button:hover {
+            background-color: #45a049; 
+            transform: scale(1.05); 
+        }
+
+        button:active {
+            transform: scale(0.95); /* it will bring it slighly down when we click an image */
+        }
+
+        input[type=file] {
+            display: none; 
+        }
+
+        #preview-image {
+            max-width: 50%; 
+            display: none;
+            margin: 20px auto;
+        }
+
+        @media only screen and (min-width: 600px) {
+            /* I have set a minimum width of 600px */
+            #instructions, #upload-section {
+                padding: 0 15%; /* it will adjust space for bigger screens */
+            }
+        }
+    </style>
+
+</head>
+<body>
+    <div id="header">
+        <h1>Plant Identification App</h1>
+    </div>
+    <div id="instructions">
+        <h2>Instructions:</h2>
+        <div class="instruction-step">1. Take the camera closer to the plant.</div>
+        <div class="instruction-step">2. Hold your camera steady for a moment to stabilize the image.</div>
+        <div class="instruction-step">3. Make sure the plant is clearly visible.</div>
+        <div class="instruction-step">4. Take the picture.</div>
+    </div>
+    <div id="upload-section">
+        <button onclick="redirectToCamera()">Open Camera</button>
+        <input type="file" accept="image/*" id="image-upload">
+        <button onclick="document.getElementById('image-upload').click();">Upload Image</button>
+        <img src="" alt="Uploaded Image" id="preview-image">
+        <p id="upload-message" style="display: none;"></p>
+    </div>
+    
+    <script>
+        //this will redirect the page to another page where it uses the inbuilt camera function of the browser to take an image
+        function redirectToCamera(){
+            window.location.href = 'file:///Users/parneetgill/Desktop/Tree%20hugger/image.html';
+        }
+
+        //i have initiated a upload image function which allows user to select image from their system and it also previews the image on the main 
+        //home page once the image is selected by the user
+        document.getElementById('image-upload').addEventListener('change', function(event) {
+            var file = event.target.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function(event) {
+                var previewImage = document.getElementById('preview-image');
+                previewImage.src = event.target.result;
+                previewImage.style.display = 'block';
+            };
+
+            reader.readAsDataURL(file);
+        });  
+
+        // it will show a message underneath the image that the image has been selected. 
+        document.getElementById('image-upload').addEventListener('change', function(event) {
+            var fileInput = event.target;
+            var uploadMessage = document.getElementById('upload-message');
+            if (fileInput.files.length > 0) {
+                uploadMessage.innerText = 'Image selected for upload.';
+                uploadMessage.style.display = 'block';
+            } else {
+                uploadMessage.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

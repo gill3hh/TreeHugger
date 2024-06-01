@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" href="sass/style.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <title>Plant Identification Tool</title>
+    <style>
+        #loadingIndicator {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+      </style>
+</head>
+<body>
+    <main>
+        <nav>
+            <div class="logo">
+                <embed src="Tree Hugger.png" alt="Logo" class="logo-image" style="margin-left: -10%">
+                <span>Tree<br>Hugger</span>
+            </div>
+            <a href="#" class="active">Home</a>
+            <a href="#">Category</a>
+            <a href="#">User Account</a>
+            <a href="#">Snap History</a>
+            <a href="environments.html" target="_parent">Environments</a>
+            <a href="#">Settings</a>
+        </nav>
+        <aside class="plant-gallery">
+            <embed src="plant1.png" alt="Plant 1" class="plant-left">
+            <embed src="plant2.png" alt="Plant 2" class="plant-right">
+        </aside>
+        <section class="newitementry">
+            <form id="entryForm">
+                <input id="myInput" type="text" name="myCountry" placeholder="search plants" size="40">
+                <button id="search-button" class="button" title="search new plants" aria-label="search for plants" tabindex="0">⌕</button>  
+            </form>
+            <section class="Listcontainer">
+                <div class="listTitle">
+                    <h1>Upload your image</h1>
+                </div>
+                <hr />
+                <div id="listItems">
+                    <div class="item">
+                        <div class="container">
+                            <div class="wrapper">
+                                <div class="image"> 
+                                    <img src="" alt="">
+                                </div>
+                                <div class="content">
+                                    <div class="icon">
+                                        <embed src="plant-icon.png" class="fas fa-cloud-upload-alt" height="80px" color="green"></i>
+                                    </div>
+                                    <div class="text">
+                                        No file chosen, yet!
+                                    </div>
+                                </div>
+                                <div id="cancel-btn">
+                                    <i class="fas fa-times"></i>
+                                </div>
+                                <div class="file-name">
+                                    File name here
+                                </div>
+                            </div>
+                            <button onclick="defaultBtnActive()" id="custom-btn">Choose a file</button>
+                            <input id="default-btn" type="file" hidden>
+                        </div>
+                        <div class="loading-circle" id="loadingCircle"></div>
+                        <div id="predictions">
+                            <div id="plantInfo" style="display: none;"></div>
+                            <div id="identificationMessage"></div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </main>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          const defaultBtn = document.getElementById("default-btn");
+          const customBtn = document.getElementById("custom-btn");
+          const img = document.querySelector(".wrapper img");
+          const wrapper = document.querySelector(".wrapper");
+          const filename = document.querySelector(".file-name");
+          const cancelBtn = document.getElementById("cancel-btn");
+          const plantInfoDiv = document.getElementById("plantInfo");
+          const loadingCircle = document.getElementById("loadingCircle");
+          const identificationMessage = document.getElementById("identificationMessage");
+          const retryButton = document.getElementById("retrybutton");
+      
+          customBtn.addEventListener("click", function(event) {
+              event.preventDefault();
+              defaultBtn.click();
+          });
+      
+          defaultBtn.addEventListener("change", function() {
+              const file = this.files[0];
+              if (file) {
+                  const reader = new FileReader();
+                  reader.onload = function() {
+                      img.src = reader.result;
+                      wrapper.classList.add("active");
+                      filename.textContent = file.name;
+                      identifyPlant(file); // Update to send the file directly
+                  };
+                  reader.readAsDataURL(file);
+              }
+          });
+      
+          cancelBtn.addEventListener("click", function() {
+              img.src = "";
+              wrapper.classList.remove("active");
+              filename.textContent = "No file chosen, yet!";
+              defaultBtn.value = "";
+              plantInfoDiv.style.display = "none";
+              loadingCircle.style.display = "none";
+              identificationMessage.innerText = "";
+          });
+      
+          function identifyPlant(file) {
+              loadingCircle.style.display = "block";
+              identificationMessage.innerText = "";
+              const formData = new FormData();
+              formData.append("images", file); // Ensure the field matches the API expectation, typically 'images'
+      
+              fetch("https://plant.id/api/v3/identification", {
+                  method: 'POST',
+                  headers: {
+                      "Api-Key": "Ae3UKCa0OzsNYqYHkpnvSxy4rF1r4pfrsOaLtR7ZpLWbbyWPiC"
+                  },
+                  body: formData
+              }).then(response => {
+                  if (!response.ok) {
+                      throw new Error('Network response was not ok ' + response.statusText);
+                  }
+                  return response.json();
+              }).then(result => {
+                  loadingCircle.style.display = "none";
+                  if (result && result.result && result.result.classification) {
+                      const name = result.result.classification.suggestions[0].name;
+                      const probability = result.result.classification.suggestions[0].probability;
+                      const plantInfo = `${name} (Match: ${(probability * 100).toFixed(2)}%)`;
+                      plantInfoDiv.innerText = plantInfo;
+                      plantInfoDiv.style.display = "block";
+                  } else {
+                      identificationMessage.innerText = "No results found.";
+                  }
+              }).catch(error => {
+                  console.error('Error identifying plant:', error);
+                  loadingCircle.style.display = "none";
+                  identificationMessage.innerText = 'Error identifying plant: ' + error.message;
+                  retryButton.style.display = "block";
+              });
+          }
+      
+          retryButton.addEventListener("click", function() {
+              document.getElementById("default-btn").click();
+          });
+      });
+      </script>
+      /div>
+   </div>
+</section>     
+<div class="right-images" style="background-color: transparent;right: 0px;">
+   <img src="plant3.png" alt="Image 1">
+</div>
+</body>
+</html>

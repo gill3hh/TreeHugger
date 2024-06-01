@@ -1,0 +1,64 @@
+body {
+    background-color: #e4e4ba; /* Updated pale beige */
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(to right, rgb(27, 110, 71), rgb(36, 121, 81), rgb(186, 243, 164));
+    padding: 10px 20px;
+}
+
+#logo {
+    height: 50px; /* Maintain logo size */
+    width: auto;
+    margin-right: 10px;
+}
+
+#company-name {
+    color: white;
+    font-size: 20px; /* Slightly smaller than the original h1 but still prominent */
+    font-weight: bold; /* Maintains boldness */
+    margin-right: 20px; /* Right margin to space it from the buttons */
+}
+
+#company-name span {
+    display: block; /* Ensures each word appears on a new line */
+}
+
+nav {
+    display: flex; /* Ensures buttons are laid out in a row and keeps them next to the company name */
+    margin-left: 10px; /* Reduced space to keep buttons closer to company name */
+}
+
+.nav-button {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 16px;
+    margin: 0 5px; /* Adds a little space around each button */
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.nav-button:hover {
+    text-decoration: underline;
+}
+
+#settings {
+    margin: 20px;
+}
+
+.setting-item {
+    margin-bottom: 20px;
+}
+
+.setting-item label {
+    display: block; /* Make labels block to enforce new line */
+}
+
+.setting-item select, .setting-item input {
+    display: block; /* Ensure elements appear below their labels */
+}

@@ -1,0 +1,80 @@
+
+<!--<!DOCTYPE html>
+<html>
+<head>
+    <title>My Plants</title>
+</head>
+<body>
+    <h1>My Plants</h1>
+    <ul>
+        {% for plant in plants %}
+            <li>{{ plant.name }} - {{ plant.description }}</li>
+        {% endfor %}
+    </ul>
+    <form action="{% url 'logout' %}" method="post">
+      {% csrf_token %}
+      <button type="submit">Log Out</button>
+    </form>
+
+</body>
+</html>-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Plants</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 40px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        ul {
+            list-style: none; 
+            padding: 0;
+        }
+        li {
+            background-color: white;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        form {
+            margin-top: 20px;
+        }
+        button {
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-transform: uppercase;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            width: auto;
+            margin: 20px auto; 
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #449d44;
+        }
+    </style>
+</head>
+<body>
+    <h1>My Plants</h1>
+    <ul>
+        {% for plant in plants %}
+            <li>{{ plant.name }} - {{ plant.description }}</li>
+        {% endfor %}
+    </ul>
+    <form action="{% url 'logout' %}" method="post">
+      {% csrf_token %}
+      <button type="submit">Log Out</button>
+    </form>
+</body>
+</html>

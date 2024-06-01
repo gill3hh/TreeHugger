@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Identification Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('file:///C:/Users/Balkaran/Desktop/back.jpg');
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        header {
+            background-color: #20493c;
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        main {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+        }
+        .logo img {
+            height: 60px;
+        }
+        footer {
+            background-color: #20493c;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            margin-top: auto;
+        }
+        .social a {
+            color: white;
+            margin-right: 10px;
+        }
+        #imagePreview img {
+            max-width: 60%;
+            max-height: 300px;
+            height: auto;
+        }
+        #loadingIndicator {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+        #retryButton {
+            display: none;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #20493c;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #retryButton:hover {
+            background-color: #16723f;
+        }
+        #identificationMessage {
+            text-align: left;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo"><img src="file:///C:/Users/Balkaran/Desktop/logo.png" alt="Your Logo"></div>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">User Account</a></li>
+                <li><a href="#">Settings</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h1>Plant Identification Tool</h1>
+        <p>Upload a picture of a plant or use your camera to identify it.</p>
+        <div id="imageUpload">
+            <input type="file" id="uploadInput" accept="image/*">
+            <button id="cameraButton">Use Camera</button>
+        </div>
+        <div id="videoContainer" style="display: none;">
+            <video id="cameraFeed" autoplay></video>
+            <button id="captureButton">Capture Image</button>
+        </div>
+        <div id="imagePreview"></div>
+        <div id="loadingIndicator">Loading...</div>
+        <div id="plantInfo" style="display: none;"></div>
+        <div id="plantCommonName"></div>
+        <div id="identificationMessage"></div>
+        <button id="retryButton">Retry</button>
+    </main>
+    <footer>
+        <p>Contact: planthugger@gmail.com</p>
+        <div class="social">
+            <a href="#">Facebook</a>
+            <a href="#">Twitter</a>
+            <a href="#">Instagram</a>
+        </div>
+    </footer>
+
+    <script>
+        function identifyPlant(imageUrl) {
+            document.getElementById("loadingIndicator").style.display = "block";
+
+            fetch(imageUrl)
+            .then(response => response.blob())
+            .then(blob => {
+                var formData = new FormData();
+                formData.append("images", blob);
+
+                fetch("https://plant.id/api/v3/identification", {
+                    method: 'POST',
+                    headers: {
+                        "Api-Key": "Ae3UKCa0OzsNYqYHkpnvSxy4rF1r4pfrsOaLtR7ZpLWbbyWPiC"
+                    },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(result => {
+                    var accessToken = result.access_token;
+                    var name = result.result.classification.suggestions[0].name;;
+                    var probability = result.result.classification.suggestions[0].probability; // Extract the probability from the API response
+                    var plantInfo = `${name} (Match: ${probability*100}%)`; // Combine name and probability
+                    document.getElementById("plantInfo").innerText = plantInfo; // Display the plant info on the webpage
+                    document.getElementById("plantInfo").style.display = "block"; // Show the plant info div
+                    document.getElementById("loadingIndicator").style.display = "none";
+                    fetchPlantCommonNames(accessToken);
+                })
+                .catch(error => {
+                    console.error('Error identifying plant:', error);
+                    document.getElementById("identificationMessage").innerText = 'Error identifying plant: ' + error.message;
+                    document.getElementById("loadingIndicator").style.display = "none";
+                    document.getElementById("retryButton").style.display = "block"; // Display the retry button
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching image:', error);
+                document.getElementById("identificationMessage").innerText = 'Error fetching image: ' + error.message;
+                document.getElementById("loadingIndicator").style.display = "none";
+                document.getElementById("retryButton").style.display = "block"; // Display the retry button
+            });
+        }
+
+        function fetchPlantCommonNames(accessToken) {
+            var myHeaders = new Headers();
+            myHeaders.append("Api-Key", "Ae3UKCa0OzsNYqYHkpnvSxy4rF1r4pfrsOaLtR7ZpLWbbyWPiC");
+
+            var requestOptions = {
+                method: 'GET',
+                headers: myHeaders,
+                redirect: 'follow'
+            };
+
+            fetch(`https://plant.id/api/v3/identification/${accessToken}?details=common_names&language=en`, requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                // Display plant common names on the webpage
+                var commonNames = result.result.classification.suggestions[0].details.common_names;
+                var commonName = commonNames[0];
+                document.getElementById("plantCommonName").innerHTML = commonName;
+                document.getElementById("loadingIndicator").style.display = "none";
+            })
+            .catch(error => {
+                console.error('Error fetching plant common names:', error);
+                document.getElementById("identificationMessage").innerText = 'Error fetching plant common name: ' + error.message;
+                document.getElementById("loadingIndicator").style.display = "none";
+                document.getElementById("retryButton").style.display = "block"; // Display the retry button
+            });
+        }
+
+        document.getElementById("uploadInput").addEventListener("change", function(event) {
+            var file = event.target.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function(event) {
+                var imageUrl = event.target.result;
+                document.getElementById("imagePreview").innerHTML = '<img src="' + imageUrl + '" alt="Uploaded Image">';
+                identifyPlant(imageUrl); // Trigger plant identification when image is uploaded
+            }
+
+            reader.readAsDataURL(file);
+        });
+
+        // Camera button functionality 
+        document.getElementById("cameraButton").addEventListener("click", function() {
+            document.getElementById("imageUpload").style.display = "none";
+            document.getElementById("videoContainer").style.display = "block";
+
+            navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function(stream) {
+                var video = document.getElementById('cameraFeed');
+                video.srcObject = stream;
+                video.play();
+            })
+            .catch(function(error) {
+                console.error('Error accessing camera:', error);
+                document.getElementById("identificationMessage").innerText = 'Error accessing camera: ' + error.message;
+                document.getElementById("retryButton").style.display = "block"; // Display the retry button
+            });
+        });
+
+        document.getElementById("captureButton").addEventListener("click", function() {
+            var video = document.getElementById('cameraFeed');
+            var canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            var context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Stop video stream
+            video.pause();
+            video.srcObject.getTracks().forEach(track => track.stop());
+
+            // Convert captured image to data URL
+            var imageUrl = canvas.toDataURL('image/jpeg');
+
+            // Display the captured image
+            //document.getElementById("imagePreview").innerHTML = '<img src="' + imageUrl + '" alt="Captured Image">';
+
+            // Identify plant using captured image
+            identifyPlant(imageUrl);
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("retryButton").addEventListener("click", function() {
+        console.log("Retry button clicked"); // Add this to check if the button is responsive
+        document.getElementById("imageUpload").style.display = "block";
+        document.getElementById("videoContainer").style.display = "none";
+        document.getElementById("imagePreview").innerHTML = "";
+        document.getElementById("plantInfo").style.display = "none";
+        document.getElementById("plantCommonName").innerHTML = "";
+        document.getElementById("identificationMessage").innerText = "";
+        document.getElementById("retryButton").style.display = "none";
+        document.getElementById("uploadInput").value = ""; // Reset the input field
+    });
+});
+
+
+       
+
+    </script>
+</body>
+</html>
